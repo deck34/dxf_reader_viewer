@@ -32,7 +32,9 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.ts_load = new System.Windows.Forms.ToolStripButton();
             this.ts_save = new System.Windows.Forms.ToolStripButton();
+            this.pb_image = new System.Windows.Forms.PictureBox();
             this.toolStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_image)).BeginInit();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -66,16 +68,31 @@
             this.ts_save.Text = "Save";
             this.ts_save.Click += new System.EventHandler(this.ts_save_Click);
             // 
+            // pb_image
+            // 
+            this.pb_image.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pb_image.BackColor = System.Drawing.SystemColors.Window;
+            this.pb_image.Location = new System.Drawing.Point(13, 29);
+            this.pb_image.Name = "pb_image";
+            this.pb_image.Size = new System.Drawing.Size(541, 426);
+            this.pb_image.TabIndex = 1;
+            this.pb_image.TabStop = false;
+            // 
             // main_form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(566, 467);
+            this.Controls.Add(this.pb_image);
             this.Controls.Add(this.toolStrip1);
             this.Name = "main_form";
             this.Text = "DXF reader viewer";
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_image)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -86,6 +103,7 @@
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton ts_load;
         private System.Windows.Forms.ToolStripButton ts_save;
+        private System.Windows.Forms.PictureBox pb_image;
     }
 }
 
