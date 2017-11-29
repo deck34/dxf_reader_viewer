@@ -14,11 +14,11 @@ namespace dxf_reader_viewer
     public partial class main_form : Form
     {
         Bitmap bmp;
+        List<Dictionary<int,String>> data = new List<Dictionary<int, String>>();
 
         public main_form()
         {
             InitializeComponent();
-            Draw();
         }
 
         void Draw()
@@ -26,7 +26,17 @@ namespace dxf_reader_viewer
             bmp = new Bitmap(pb_image.Width, pb_image.Height);
             Graphics graph = Graphics.FromImage(bmp);
             Pen pen = new Pen(Color.Red);
-            graph.DrawLine(pen, 10,50,150,200);
+            //graph.DrawLine(pen, 10,50,150,200);
+
+            for(int i=0; i < data.Count; i++)
+            {
+                graph.DrawLine(pen, 5 * float.Parse(data[i][10],System.Globalization.CultureInfo.InvariantCulture),
+                    5 * float.Parse(data[i][20], System.Globalization.CultureInfo.InvariantCulture),
+                    5 * float.Parse(data[i][11], System.Globalization.CultureInfo.InvariantCulture),
+                    5 * float.Parse(data[i][21], System.Globalization.CultureInfo.InvariantCulture));
+            }
+
+
             pb_image.Image = bmp;
         }
 
@@ -52,14 +62,35 @@ namespace dxf_reader_viewer
                 StreamReader reader = new StreamReader(file1); // создаем «потоковый читатель» и связываем его с файловым потоком 
                                                                //read = reader.ReadToEnd();
 
-                List<string> str = new List<string>();
-                //List<string[]> str1 = new List<string[]>();
+                List<string> input = new List<string>();
                 while ((read = reader.ReadLine()) != null)
-                    str.Add(read);
-
-                //for (int i = 0; i < str.Count; i++)
-                //    str1.Add(str[i].Split(';'));
+                    input.Add(read);
                 file1.Close();
+
+                int index = input.IndexOf("ENTITIES");
+                input.RemoveRange(0, index);
+                index = input.IndexOf("ENDSEC");
+                input.RemoveRange(index, input.Count-index);
+
+                while (true)
+                {
+                    index = input.IndexOf("LINE");
+                    if (index == -1)
+                        break;
+                    Dictionary<int, String> temp = new Dictionary<int, String>();
+                    temp.Add(0, input[index]);
+                    int[] dxf_code = { 10, 20, 30, 11, 21, 31 };
+
+                    for(int i=0;i < dxf_code.Length; i++)
+                    {
+                        index = input.IndexOf(" "+dxf_code[i].ToString());
+                        temp.Add(dxf_code[i], input[index + 1]);
+                    }
+                    input.RemoveRange(0, index+2);
+                    data.Add(temp);
+                }
+                Draw();
+                
             }
             else
             {
