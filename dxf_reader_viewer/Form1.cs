@@ -14,26 +14,68 @@ namespace dxf_reader_viewer
     public partial class main_form : Form
     {
         Bitmap bmp;
-        List<Dictionary<int,String>> data = new List<Dictionary<int, String>>();
+        Graphics graph;
+        List<Geometry> data = new List<Geometry>();
+        Dictionary<String, int[]> dxf_codes = new Dictionary<string, int[]>();
+        Color[] colors = {Color.Blue,
+                Color.Green,
+                Color.Red,
+                Color.Cyan,
+                Color.Olive,
+                Color.YellowGreen,
+                Color.Black,
+                Color.BlueViolet,
+                Color.Gold,
+                Color.Pink,
+                Color.Aqua,
+                Color.Brown,
+                Color.DarkBlue,
+                Color.DarkGreen,
+                Color.DeepSkyBlue,
+                Color.Green,
+                Color.Indigo,
+                Color.Lime,
+                Color.MistyRose,
+                Color.Navy};
 
         public main_form()
         {
             InitializeComponent();
+            Init();
+            init_dxf_codes();
+            numPenWidth.ValueChanged += ReDraw;
+            numScale.ValueChanged += ReDraw;
+            lbColors.SelectedIndexChanged += ReDraw;
+        }
+
+        void init_dxf_codes()
+        {
+            dxf_codes.Add("LINE", new int[] { 10, 20, 30, 11, 21, 31 });
+            dxf_codes.Add("CIRCLE", new int[] { 10, 20, 30, 40 });
+        }
+
+        void Init()
+        {
+            bmp = new Bitmap(pb_image.Width, pb_image.Height);
+            graph = Graphics.FromImage(bmp);
+            foreach (var color in colors)
+                lbColors.Items.Add(color.ToString());
+            lbColors.SelectedIndex = 2;
+        }
+
+        private void ReDraw(object sender, EventArgs e)
+        {
+            Draw();
         }
 
         void Draw()
         {
-            bmp = new Bitmap(pb_image.Width, pb_image.Height);
-            Graphics graph = Graphics.FromImage(bmp);
-            Pen pen = new Pen(Color.Red);
-            //graph.DrawLine(pen, 10,50,150,200);
-
-            for(int i=0; i < data.Count; i++)
+            graph.Clear(Color.White);
+            Pen pen = new Pen(colors[lbColors.SelectedIndex]);
+            pen.Width = (float)numPenWidth.Value;
+            for (int i=0; i < data.Count; i++)
             {
-                graph.DrawLine(pen, 5 * float.Parse(data[i][10],System.Globalization.CultureInfo.InvariantCulture),
-                    5 * float.Parse(data[i][20], System.Globalization.CultureInfo.InvariantCulture),
-                    5 * float.Parse(data[i][11], System.Globalization.CultureInfo.InvariantCulture),
-                    5 * float.Parse(data[i][21], System.Globalization.CultureInfo.InvariantCulture));
+                data[i].Draw(graph, pen, (float)numScale.Value);
             }
 
 
@@ -74,20 +116,36 @@ namespace dxf_reader_viewer
 
                 while (true)
                 {
-                    index = input.IndexOf("LINE");
-                    if (index == -1)
-                        break;
-                    Dictionary<int, String> temp = new Dictionary<int, String>();
-                    temp.Add(0, input[index]);
-                    int[] dxf_code = { 10, 20, 30, 11, 21, 31 };
-
-                    for(int i=0;i < dxf_code.Length; i++)
+                    var keys = dxf_codes.Keys;
+                    index = input.Count;
+                    int counter = 0;
+                    foreach(var key in keys)
                     {
-                        index = input.IndexOf(" "+dxf_code[i].ToString());
-                        temp.Add(dxf_code[i], input[index + 1]);
+                        int i = input.IndexOf(key);
+                        if (i < index && i != -1)
+                            index = i;
+                        else if (i == -1)
+                            counter++;
                     }
+                    if (counter == keys.Count)
+                        break;
+
+                    String type = input[index];
+                    
+                    Dictionary<int, float> temp = new Dictionary<int, float>();
+
+                    try
+                    {
+                        for (int i = 0; i < dxf_codes[type].Length; i++)
+                        {
+                            index = input.IndexOf(" " + dxf_codes[type][i].ToString());
+                            temp.Add(dxf_codes[type][i], float.Parse(input[index + 1], System.Globalization.CultureInfo.InvariantCulture));
+                        }
+                        data.Add(new Geometry(type,temp));
+                    }
+                    catch (Exception) { }
+
                     input.RemoveRange(0, index+2);
-                    data.Add(temp);
                 }
                 Draw();
                 
@@ -111,3 +169,4 @@ namespace dxf_reader_viewer
         }
     }
 }
+
