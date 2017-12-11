@@ -142,34 +142,34 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(563, 77);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(47, 13);
+            this.label3.Size = new System.Drawing.Size(58, 13);
             this.label3.TabIndex = 7;
-            this.label3.Text = "Маштаб";
+            this.label3.Text = "Маштаб %";
             // 
             // numScale
             // 
-            this.numScale.DecimalPlaces = 1;
             this.numScale.Increment = new decimal(new int[] {
-            5,
-            0,
-            0,
-            65536});
-            this.numScale.Location = new System.Drawing.Point(566, 93);
-            this.numScale.Maximum = new decimal(new int[] {
             10,
             0,
             0,
             0});
+            this.numScale.Location = new System.Drawing.Point(566, 93);
+            this.numScale.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
             this.numScale.Minimum = new decimal(new int[] {
-            1,
+            10,
             0,
             0,
-            65536});
+            0});
             this.numScale.Name = "numScale";
             this.numScale.Size = new System.Drawing.Size(83, 20);
             this.numScale.TabIndex = 6;
+            this.numScale.Tag = "";
             this.numScale.Value = new decimal(new int[] {
-            1,
+            100,
             0,
             0,
             0});

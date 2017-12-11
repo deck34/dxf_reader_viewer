@@ -75,7 +75,7 @@ namespace dxf_reader_viewer
             pen.Width = (float)numPenWidth.Value;
             for (int i=0; i < data.Count; i++)
             {
-                data[i].Draw(graph, pen, (float)numScale.Value);
+                data[i].Draw(graph, pen, (float)numScale.Value/100);
             }
 
 
